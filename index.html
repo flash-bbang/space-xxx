@@ -1662,7 +1662,7 @@ body{font:14px system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:tr
   function startEnding(){
     state = 'ending'; endT = performance.now(); endReady = false; fw = [];
     mover = null; hz = null; drops = []; shots = []; blackout = 0; cutin = null;
-    fx.fast = 0; fx.flip = 0; fx.boost = 0; renderFx();
+    fx.fast = 0; fx.flip = 0; fx.boost = 0; renderFx(); hud.hidden = true;
     flight = Object.assign(rollFlight(), {phase:'wait', x:0, y:0, u:0, v:0, shown:0, fade:0, passed:-1,
       stars: [...Array(90)].map(()=>({x:Math.random()*W, y:Math.random()*H, z:Math.random()}))});
     announce({title:'발사 준비!', sub:'랜덤 점수만큼 날아갑니다'});
