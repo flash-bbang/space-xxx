@@ -666,6 +666,20 @@ body{font:14px system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:tr
     }
   }
 
+  // Phones only allow sound from a finished tap (touchend / pointerup / click), not from pointerdown,
+  // so unlock on those too. A silent one-sample sound wakes up iOS Safari.
+  function unlockAudio(){
+    ensureAudio();
+    if (!ac) return;
+    if (ac.state !== 'running') ac.resume().catch(() => {});
+    if (!unlockAudio.done){
+      try { const b = ac.createBuffer(1, 1, 22050), src = ac.createBufferSource(); src.buffer = b; src.connect(ac.destination); src.start(0); unlockAudio.done = true; } catch(e){}
+    }
+  }
+  ['pointerup', 'touchend', 'click', 'keydown'].forEach(t => addEventListener(t, unlockAudio, {passive: true}));
+  // play even when an iPhone's silent switch is on (Safari 16.4+)
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch(e){}
+
   // stop sound while the app is in the background, resume on return
   document.addEventListener('visibilitychange', () => {
     if (!ac) return;
